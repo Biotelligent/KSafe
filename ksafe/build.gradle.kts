@@ -3,11 +3,15 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.android.kotlin.multiplatform.library)
-    alias(libs.plugins.vanniktech.mavenPublish)
-
-    alias(libs.plugins.kotlin.serialization)
+//    alias(libs.plugins.kotlinMultiplatform)
+//    alias(libs.plugins.android.kotlin.multiplatform.library)
+//    alias(libs.plugins.vanniktech.mavenPublish)
+//
+//    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.buildconfig)
+    alias(libs.plugins.kotlinxSerialization)
+    alias(libs.plugins.androidKmpLibrary)
+    id("com.airware.convention.kmm")
 }
 
 group = "eu.anifantakis"
@@ -16,41 +20,31 @@ version = "2.0.0"
 kotlin {
     android {
         namespace = "eu.anifantakis"
-        compileSdk = libs.versions.android.compileSdk.get().toInt()
-        minSdk = libs.versions.android.minSdk.get().toInt()
+        compileSdk = libs.versions.compileSdk.get().toInt()
+        minSdk = libs.versions.minSdk.get().toInt()
 
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-
-        withHostTestBuilder {
-        }
-
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-            instrumentationRunnerArguments["clearPackageData"] = "true"
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
-    listOf(
-        iosX64(),
-        iosArm64(),
-        iosSimulatorArm64(),
-        macosX64(),
-        macosArm64(),
-    ).forEach {
-        it.binaries.framework {
-            baseName = "ksafe"
-            isStatic = true
-        }
-    }
+//    listOf(
+//        iosX64(),
+//        iosArm64(),
+//        iosSimulatorArm64(),
+//        macosX64(),
+//        macosArm64(),
+//    ).forEach {
+//        it.binaries.framework {
+//            baseName = "ksafe"
+//            isStatic = true
+//        }
+//    }
 
     // Add a JVM target to support desktop platforms.
     jvm {
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_21)
         }
     }
 
@@ -90,7 +84,7 @@ kotlin {
                 // parameter. @Stable has BINARY retention and no runtime effect, so
                 // non-Compose consumers (Ktor servers, CLI tools, plain JVM) do NOT
                 // need compose-runtime on their classpath at runtime.
-                compileOnly(libs.runtime)
+                compileOnly(libs.cmp.runtime)
             }
         }
 
@@ -150,99 +144,5 @@ kotlin {
         compilerOptions {
             freeCompilerArgs.add("-Xexpect-actual-classes")
         }
-
-        commonTest.dependencies {
-            implementation(libs.kotlin.test)
-            implementation(libs.kotlinx.coroutines.test)
-            implementation(libs.turbine)
-        }
-
-        getByName("androidDeviceTest") {
-            dependencies {
-                implementation(libs.androidx.runner)
-                implementation(libs.androidx.core)
-                implementation(libs.androidx.junit)
-                implementation(kotlin("test"))
-                implementation(libs.kotlinx.coroutines.test)
-                implementation(libs.turbine)
-            }
-        }
-    }
-
-    // Configure iOS tests to run sequentially
-    targets.withType<org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget>().configureEach {
-        binaries.all {
-            if (this is org.jetbrains.kotlin.gradle.plugin.mpp.TestExecutable) {
-                // Force sequential test execution
-                linkerOpts("-single_module")
-            }
-        }
     }
 }
-
-dependencies {
-    "androidTestUtil"(libs.androidx.orchestrator)
-}
-
-mavenPublishing {
-    publishToMavenCentral()
-
-    signAllPublications()
-    coordinates(
-        groupId =  group.toString(),
-        artifactId = "ksafe",
-        version = version.toString()
-    )
-
-    pom {
-        name = "KSafe MultiPlatform Encrypted Persistence"
-        description = "Library to allow for multiplatform seamless encrypted persistence using DataStore Preferences"
-        inceptionYear = "2025"
-        url = "https://github.com/ioannisa/ksafe"
-        licenses {
-            license {
-                name = "Apache-2.0"
-                url = "https://www.apache.org/licenses/LICENSE-2.0"
-            }
-        }
-        developers {
-            developer {
-                id = "ioannis-anifantakis"
-                name = "Ioannis Anifantakis"
-                url = "https://anifantakis.eu"
-                email = "ioannisanif@gmail.com"
-            }
-        }
-        scm {
-            url = "https://github.com/ioannisa/ksafe"
-            connection = "scm:git:https://github.com/ioannisa/ksafe.git"
-            developerConnection = "scm:git:ssh://git@github.com/ioannisa/ksafe.git"
-        }
-    }
-}
-
-// try and configure iOS test tasks to run sequentially
-tasks.withType<org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest>().configureEach {
-    // Set environment variable to help with debugging
-    environment("KSAFE_TEST_MODE", "sequential")
-}
-
-tasks.named<Test>("jvmTest") {
-    // Stress tests in JvmKSafeTest each launch tens of thousands of concurrent
-    // putDirect operations whose state (memoryCache + dirtyKeys + DataStore write
-    // queue) accumulates faster than the test class's tearDown + GC can drain it.
-    // Forking a fresh JVM per test class bounds the live set to a single class
-    // and keeps the suite well under any reasonable heap.
-    maxHeapSize = "2g"
-    forkEvery = 1
-    doFirst {
-        val ksafeDir = File(System.getProperty("user.home"), ".eu_anifantakis_ksafe")
-        if (ksafeDir.exists()) {
-            ksafeDir.deleteRecursively()
-            println("Cleaned up KSafe test data directory: $ksafeDir")
-        }
-    }
-}
-
-// Run test
-// ./gradlew :ksafe:jvmTest
