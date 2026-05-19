@@ -1,6 +1,7 @@
 package eu.anifantakis.lib.ksafe.internal
 
 import eu.anifantakis.lib.ksafe.KSafeConfig
+import eu.anifantakis.lib.ksafe.KSafeDefaults.json
 import eu.anifantakis.lib.ksafe.KSafeKeyInfo
 import eu.anifantakis.lib.ksafe.KSafeKeyStorage
 import eu.anifantakis.lib.ksafe.KSafeMemoryPolicy
@@ -133,6 +134,8 @@ internal class KSafeCore(
 ) {
 
     @PublishedApi internal val engine: KSafeEncryption by lazy(engineProvider)
+
+    public val encryptor: KSafeEncryption get() = engine
 
     @PublishedApi internal val json: Json = config.json
 
