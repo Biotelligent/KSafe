@@ -8,6 +8,7 @@ plugins {
 //    alias(libs.plugins.vanniktech.mavenPublish)
 //
 //    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ktlint)
     alias(libs.plugins.buildconfig)
     alias(libs.plugins.kotlinxSerialization)
     alias(libs.plugins.androidKmpLibrary)
@@ -70,7 +71,7 @@ kotlin {
         @Suppress("unused")
         val commonMain by getting {
             dependencies {
-                // api (not implementation) — Json is part of KSafe's public API (KSafeConfig.json),
+                // api (not implementation) — JSON is part of KSafe's public API (KSafeConfig.json),
                 // so consumers get kotlinx-serialization-json transitively without declaring it themselves.
                 api(libs.kotlinx.serialization.json)
                 implementation(libs.kotlinx.coroutines.core)
@@ -122,27 +123,21 @@ kotlin {
             }
         }
 
-        val jvmTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-
-        // Dependencies shared by wasmJs + js targets.
+         // Dependencies shared by wasmJs + js targets.
         val webMain by getting {
             dependencies {
                 implementation(libs.cryptography.provider.webcrypto)
             }
         }
 
-        val webTest by getting {
-            dependencies {
-                implementation(kotlin("test"))
-            }
-        }
-
         compilerOptions {
             freeCompilerArgs.add("-Xexpect-actual-classes")
         }
+    }
+}
+
+ktlint {
+    filter {
+        exclude("**/*.kt")
     }
 }

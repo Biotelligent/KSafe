@@ -144,8 +144,8 @@ private fun buildJvmKSafe(
     }
     secureDirectory(resolvedBaseDir)
 
-    val baseFileName = fileName?.let { "eu_anifantakis_ksafe_datastore_$it" }
-        ?: "eu_anifantakis_ksafe_datastore"
+    val baseFileName = fileName?.let { "${config.defaultBaseFileName}_$it" }
+        ?: config.defaultBaseFileName
     val datastoreFile = File(resolvedBaseDir, "$baseFileName.preferences_pb")
 
     // DataStore launches its own coroutines on the scope we hand it; we

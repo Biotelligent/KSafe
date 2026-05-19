@@ -155,8 +155,8 @@ private fun buildAndroidKSafe(
         if (hasStrongBox) add(KSafeKeyStorage.HARDWARE_ISOLATED)
     }
 
-    val baseFileName = fileName?.let { "eu_anifantakis_ksafe_datastore_$it" }
-        ?: "eu_anifantakis_ksafe_datastore"
+    val baseFileName = fileName?.let { "${config.defaultBaseFileName}_$it" }
+        ?: config.defaultBaseFileName
 
     // Resolve the actual DataStore file path. Cache by absolute path so that
     // (fileName, baseDir) pairs uniquely identify a DataStore — two callers

@@ -224,8 +224,8 @@ private fun buildAppleKSafe(
         error = null,
     )
 
-    val baseFileName = fileName?.let { "eu_anifantakis_ksafe_datastore_$it" }
-        ?: "eu_anifantakis_ksafe_datastore"
+    val baseFileName = fileName?.let { "${config.defaultBaseFileName}_$it" }
+        ?: config.defaultBaseFileName
     val datastoreFilePath = "$resolvedDirPath/$baseFileName.preferences_pb"
 
     // 1.x → 2.0 auto-migration: pre-2.0 iOS stored the DataStore in

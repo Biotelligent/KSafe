@@ -228,6 +228,8 @@ internal class KSafeCore(
     @PublishedApi
     internal val dirtyKeys = KSafeConcurrentSet<String>()
 
+    internal fun baseFileName(fileName: String? = null): String = fileName?.let { "${config.defaultBaseFileName}_$it" } ?: config.defaultBaseFileName
+
     // ---- coroutine scopes ----
 
     private val writeScope = CoroutineScope(Dispatchers.Default + SupervisorJob())

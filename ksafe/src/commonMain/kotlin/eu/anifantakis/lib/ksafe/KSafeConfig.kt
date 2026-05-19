@@ -77,7 +77,8 @@ data class KSafeConfig(
     val keySize: Int = 256,
     val androidAuthValiditySeconds: Int = 30,
     val requireUnlockedDevice: Boolean = false,
-    val json: Json = KSafeDefaults.json
+    val json: Json = KSafeDefaults.json,
+    val defaultBaseFileName: String = "eu_anifantakis_ksafe_datastore"
 ) {
     init {
         require(keySize == 128 || keySize == 256) {
