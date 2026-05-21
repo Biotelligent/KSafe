@@ -2,6 +2,7 @@ package eu.anifantakis.lib.ksafe
 
 import androidx.compose.runtime.Stable
 import eu.anifantakis.lib.ksafe.internal.KSafeCore
+import eu.anifantakis.lib.ksafe.internal.KSafeEncryption
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.serializer
+import kotlin.io.encoding.Base64
 
 /**
  * An API for secure key–value storage.
@@ -89,6 +91,23 @@ class KSafe @PublishedApi internal constructor(
      */
     @PublishedApi internal val onClearAllCleanup: suspend () -> Unit = {},
 ) {
+//    public val encryptor: KSafeEncryption = core.engine
+    internal val encryptor: KSafeEncryption by lazy(core.engineProvider )
+
+    // Key is crypto.AesGcm - refer AppleKeyChainEncryption
+    fun encryptText(keyId: String, plainText: String): String {
+        val plainTextByteArray = plainText.encodeToByteArray()
+        val ciphertext: ByteArray = encryptor.encrypt(keyId, plainTextByteArray)
+        return Base64.encode(ciphertext)
+    }
+
+    fun decryptText(keyId: String, cipherText: String): String {
+        val decodedCipherText = Base64.decode(cipherText) // .decodeToString()
+        // val decodedByteArray = key.cipher().decryptBlocking(decodedCipherText)
+        val decodedByteArray = encryptor.decrypt(keyId, decodedCipherText)
+        return decodedByteArray.decodeToString()
+    }
+
     /**
      * Returns the protection tier and actual storage location of a specific key.
      *

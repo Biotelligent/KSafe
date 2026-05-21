@@ -63,7 +63,7 @@ internal class KSafeCore(
      * *after* the core has already been wired up — engine resolution is
      * deferred until the first background coroutine actually needs it.
      */
-    engineProvider: () -> KSafeEncryption,
+    internal val engineProvider: () -> KSafeEncryption,
     private val config: KSafeConfig,
     @PublishedApi internal val memoryPolicy: KSafeMemoryPolicy,
     @PublishedApi internal val plaintextCacheTtl: Duration,
@@ -135,7 +135,7 @@ internal class KSafeCore(
 
     @PublishedApi internal val engine: KSafeEncryption by lazy(engineProvider)
 
-    public val encryptor: KSafeEncryption get() = engine
+    // public val encryptor: KSafeEncryption get() = engine
 
     @PublishedApi internal val json: Json = config.json
 
