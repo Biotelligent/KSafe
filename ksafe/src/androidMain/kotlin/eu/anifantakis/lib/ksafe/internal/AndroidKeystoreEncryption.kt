@@ -1,10 +1,16 @@
 package eu.anifantakis.lib.ksafe.internal
 
+import android.R.attr.identifier
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
 import android.security.keystore.StrongBoxUnavailableException
+import dev.whyoleg.cryptography.CryptographyProvider
+import dev.whyoleg.cryptography.algorithms.AES
+import eu.anifantakis.lib.ksafe.KSafe
 import eu.anifantakis.lib.ksafe.KSafeConfig
+import eu.anifantakis.lib.ksafe.KSafeWriteMode
+import kotlinx.coroutines.runBlocking
 import java.security.KeyStore
 import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
@@ -43,10 +49,58 @@ internal class AndroidKeystoreEncryption(
      * Keys are cached after first access and remain valid until explicitly deleted.
      */
     private val keyCache = java.util.concurrent.ConcurrentHashMap<String, SecretKey>()
+    private val aesGcmKeyCache = java.util.concurrent.ConcurrentHashMap<String, String>()
 
     /** Per-alias lock objects — avoids `intern()` pool pressure with dynamic key sets. */
     private val locks = java.util.concurrent.ConcurrentHashMap<String, Any>()
     private fun lockFor(alias: String): Any = locks.computeIfAbsent(alias) { Any() }
+
+    private fun generateNewAesGcmKey(identifier: String, ksafe: KSafe?): String {
+        val aesGcm = CryptographyProvider.Default.get(AES.GCM)
+        val keyGenerator = aesGcm.keyGenerator(keySize = AES.Key.Size.B256)
+        val key: AES.GCM.Key = keyGenerator.generateKeyBlocking()
+        val byteArray = key.encodeToByteArrayBlocking(AES.Key.Format.RAW)
+        val hexString = byteArray.toHexString()
+
+        // Store it as hex
+        ksafe?.putDirect(identifier, hexString, mode = KSafeWriteMode.Encrypted())
+        return hexString
+    }
+
+    private fun getOrCreateAesGcmKey(
+        identifier: String,
+        ksafe: KSafe?
+        ): ByteArray {
+        // Fast path: return cached key
+        aesGcmKeyCache[identifier]?.let { return it.hexToByteArray() }
+
+        // Slow path: load from Keystore (synchronized to prevent duplicate generation)
+        synchronized(lockFor(identifier)) {
+            // Double-check after acquiring lock
+            aesGcmKeyCache[identifier]?.let { return it.hexToByteArray() }
+
+            // `getKey` returns null when the alias is absent — one IPC call
+            val key = ksafe?.getDirect(identifier, generateNewAesGcmKey(identifier, ksafe)) ?: generateNewAesGcmKey(identifier, null)
+
+            // Cache the key for future use
+            aesGcmKeyCache[identifier] = key
+            return key.hexToByteArray()
+        }
+    }
+
+    override fun aesGcmKey(
+        identifier: String,
+        ksafe: KSafe?,
+        hardwareIsolated: Boolean,
+        requireUnlockedDevice: Boolean?
+    ): AES.GCM.Key {
+        return runBlocking {
+            val keyBytes = getOrCreateAesGcmKey(identifier, ksafe)
+            val aesGcm = CryptographyProvider.Default.get(AES.GCM)
+            val symmetricKey = aesGcm.keyDecoder().decodeFromByteArrayBlocking(AES.Key.Format.RAW, keyBytes)
+            symmetricKey
+        }
+    }
 
     override fun encrypt(
         identifier: String,

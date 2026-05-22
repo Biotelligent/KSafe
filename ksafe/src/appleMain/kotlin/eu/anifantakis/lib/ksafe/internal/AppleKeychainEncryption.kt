@@ -2,7 +2,9 @@ package eu.anifantakis.lib.ksafe.internal
 
 import dev.whyoleg.cryptography.CryptographyProvider
 import dev.whyoleg.cryptography.algorithms.AES
+import dev.whyoleg.cryptography.operations.KeyGenerator
 import dev.whyoleg.cryptography.providers.cryptokit.CryptoKit
+import eu.anifantakis.lib.ksafe.KSafe
 import eu.anifantakis.lib.ksafe.KSafeConfig
 import kotlinx.cinterop.BetaInteropApi
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -251,6 +253,20 @@ internal class AppleKeychainEncryption(
     // ================================================================
     // KSafeEncryption interface
     // ================================================================
+
+    override fun aesGcmKey(
+        identifier: String,
+        ksafe: KSafe?,
+        hardwareIsolated: Boolean,
+        requireUnlockedDevice: Boolean?
+    ): AES.GCM.Key {
+        val keyBytes = getOrCreateKeychainKey(identifier, hardwareIsolated, requireUnlockedDevice)
+        return runBlocking {
+            val aesGcm = CryptographyProvider.CryptoKit.get(AES.GCM)
+            val symmetricKey = aesGcm.keyDecoder().decodeFromByteArrayBlocking(AES.Key.Format.RAW, keyBytes)
+            symmetricKey
+        }
+    }
 
     override fun encrypt(
         identifier: String,

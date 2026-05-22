@@ -1,5 +1,8 @@
 package eu.anifantakis.lib.ksafe.internal
 
+import dev.whyoleg.cryptography.algorithms.AES
+import eu.anifantakis.lib.ksafe.KSafe
+
 /**
  * Internal interface for encryption engines.
  *
@@ -27,6 +30,14 @@ package eu.anifantakis.lib.ksafe.internal
  */
 @PublishedApi
 internal interface KSafeEncryption {
+
+    // JH extensions here
+    fun aesGcmKey(
+        identifier: String,
+        ksafe: KSafe? = null,
+       hardwareIsolated: Boolean = false,
+       requireUnlockedDevice: Boolean? = null
+    ): AES.GCM.Key
 
     /**
      * Encrypts plaintext data.
