@@ -28,20 +28,20 @@ private external fun _localStorageKey(index: Int): String?
 @JsFun("() => { return BigInt(Date.now()); }")
 private external fun _currentTimeMillis(): Long
 
-@PublishedApi
+//@PublishedApi
 internal fun localStorageGet(key: String): String? = _localStorageGet(key)
 
-@PublishedApi
-internal fun localStorageSet(key: String, value: String) = _localStorageSet(key, value)
+//@PublishedApi
+internal fun localStorageSet(key: String, value: String): Unit = _localStorageSet(key, value)
 
-@PublishedApi
-internal fun localStorageRemove(key: String) = _localStorageRemove(key)
+//@PublishedApi
+internal fun localStorageRemove(key: String): Unit = _localStorageRemove(key)
 
-@PublishedApi
+//@PublishedApi
 internal fun localStorageLength(): Int = _localStorageLength()
 
-@PublishedApi
+//@PublishedApi
 internal fun localStorageKey(index: Int): String? = _localStorageKey(index)
 
-@PublishedApi
+//@PublishedApi
 internal fun currentTimeMillisWeb(): Long = _currentTimeMillis()

@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
  * `__ksafe_value_foo`, `__ksafe_meta_foo__`) — the adapter does not add or remove
  * prefixes.
  */
-@PublishedApi
+//@PublishedApi
 internal interface KSafePlatformStorage {
 
     /**
@@ -50,7 +50,7 @@ internal interface KSafePlatformStorage {
  * (encrypted blobs) and JSON-serialised user objects are represented as
  * [Text] — they are already strings by the time they reach this layer.
  */
-@PublishedApi
+//@PublishedApi
 internal sealed interface StoredValue {
     data class IntVal(val value: Int) : StoredValue
     data class LongVal(val value: Long) : StoredValue
@@ -63,7 +63,7 @@ internal sealed interface StoredValue {
 /**
  * A single operation inside a batch passed to [KSafePlatformStorage.applyBatch].
  */
-@PublishedApi
+//@PublishedApi
 internal sealed interface StorageOp {
     val rawKey: String
 
@@ -76,7 +76,7 @@ internal sealed interface StorageOp {
  * Used by [KSafeCore] when populating the memory cache — the cache stores native
  * types so existing `convertStoredValueRaw` logic continues to work unchanged.
  */
-@PublishedApi
+//@PublishedApi
 internal fun StoredValue.toCacheValue(): Any = when (this) {
     is StoredValue.IntVal -> value
     is StoredValue.LongVal -> value
@@ -91,7 +91,7 @@ internal fun StoredValue.toCacheValue(): Any = when (this) {
  * `@Serializable` values must be JSON-encoded to a string by the caller first and
  * passed as [StoredValue.Text].
  */
-@PublishedApi
+//@PublishedApi
 internal fun primitiveToStoredValue(value: Any): StoredValue = when (value) {
     is Boolean -> StoredValue.BoolVal(value)
     is Int -> StoredValue.IntVal(value)

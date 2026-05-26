@@ -54,7 +54,7 @@ import kotlin.time.TimeSource
  *   - Biometric prompts (separate, not part of this class).
  *   - Reporting per-key [KSafeKeyStorage] tier (see [resolveKeyStorage]).
  */
-@PublishedApi
+//@PublishedApi
 internal class KSafeCore(
     @PublishedApi internal val storage: KSafePlatformStorage,
     /**

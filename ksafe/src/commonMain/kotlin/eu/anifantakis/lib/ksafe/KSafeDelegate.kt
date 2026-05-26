@@ -20,7 +20,7 @@ import kotlin.reflect.KProperty
  * This prevents the entire getDirect/putDirect inline chain from being duplicated
  * at every property declaration site (~250 lines per delegate → ~5 lines).
  */
-@PublishedApi
+//@PublishedApi
 internal class KSafeDelegate<T>(
     private val ksafe: KSafe,
     private val serializer: KSerializer<T>,
@@ -56,7 +56,7 @@ internal inline operator fun <reified T> KSafe.invoke(
  * Non-inline delegate that lazily creates a [Flow] on first access.
  * The property name is used as the storage key unless [key] is provided.
  */
-@PublishedApi
+//@PublishedApi
 internal class KSafeFlowDelegate<T>(
     private val ksafe: KSafe,
     private val serializer: KSerializer<T>,
@@ -79,7 +79,7 @@ internal class KSafeFlowDelegate<T>(
  * Non-inline delegate that lazily creates a [StateFlow] on first access.
  * The property name is used as the storage key unless [key] is provided.
  */
-@PublishedApi
+//@PublishedApi
 internal class KSafeStateFlowDelegate<T>(
     private val ksafe: KSafe,
     private val serializer: KSerializer<T>,
@@ -166,7 +166,7 @@ internal class WritableKSafeFlow<T> @PublishedApi internal constructor(
  * Non-inline delegate that lazily creates a [WritableKSafeFlow] on first access.
  * The property name is used as the storage key unless [key] is provided.
  */
-@PublishedApi
+//@PublishedApi
 internal class KSafeWritableFlowDelegate<T>(
     private val ksafe: KSafe,
     private val serializer: KSerializer<T>,
@@ -266,7 +266,7 @@ internal inline fun <reified T> KSafe.asStateFlow(
     ExperimentalCoroutinesApi::class,
     InternalCoroutinesApi::class, ExperimentalForInheritanceCoroutinesApi::class,
 )
-@PublishedApi
+//@PublishedApi
 internal class KSafeMutableStateFlow<T>(
     initialValue: T,
     private val persist: (T) -> Unit,
@@ -318,7 +318,7 @@ internal class KSafeMutableStateFlow<T>(
  * Non-inline delegate that lazily creates a [KSafeMutableStateFlow] on first access.
  * The property name is used as the storage key unless [key] is provided.
  */
-@PublishedApi
+//@PublishedApi
 internal class KSafeMutableStateFlowDelegate<T>(
     private val ksafe: KSafe,
     private val serializer: KSerializer<T>,

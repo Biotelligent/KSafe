@@ -12,7 +12,7 @@ import kotlinx.serialization.json.put
  * Keep key-shape and metadata parsing logic centralized so platform files
  * only handle storage/encryption specifics.
  */
-@PublishedApi
+//@PublishedApi
 internal object KeySafeMetadataManager {
     @PublishedApi
     internal const val LEGACY_ENCRYPTED_PREFIX = "encrypted_"

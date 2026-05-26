@@ -34,7 +34,7 @@ internal fun decodeBase64(encoded: String): ByteArray = Base64.decode(encoded)
 
 private val fileNameRegex = Regex("[a-z][a-z0-9_]*")
 
-const val KEY_ALIAS_PREFIX: String = "eu.anifantakis.ksafe"
+internal const val KEY_ALIAS_PREFIX: String = "eu.anifantakis.ksafe"
 
 /**
  * Sentinel user-key segments for the per-datastore master keys created by the

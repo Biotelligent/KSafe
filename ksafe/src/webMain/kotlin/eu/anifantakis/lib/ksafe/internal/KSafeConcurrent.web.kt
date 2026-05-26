@@ -6,7 +6,7 @@ package eu.anifantakis.lib.ksafe.internal
  * interface means [KSafeCore] compiles unchanged on the web target.
  */
 
-@PublishedApi
+//@PublishedApi
 internal actual class KSafeAtomicFlag actual constructor(initial: Boolean) {
     private var value: Boolean = initial
     actual fun get(): Boolean = value
@@ -18,7 +18,7 @@ internal actual class KSafeAtomicFlag actual constructor(initial: Boolean) {
     }
 }
 
-@PublishedApi
+//@PublishedApi
 internal actual class KSafeConcurrentMap<V : Any> actual constructor() {
     private val map = HashMap<String, V>()
     actual operator fun get(key: String): V? = map[key]
@@ -34,7 +34,7 @@ internal actual class KSafeConcurrentMap<V : Any> actual constructor() {
     }
 }
 
-@PublishedApi
+//@PublishedApi
 internal actual class KSafeConcurrentSet<T : Any> actual constructor() {
     private val set = HashSet<T>()
     actual fun add(value: T): Boolean = set.add(value)
@@ -43,6 +43,6 @@ internal actual class KSafeConcurrentSet<T : Any> actual constructor() {
     actual fun snapshot(): Set<T> = HashSet(set)
 }
 
-@PublishedApi
+//@PublishedApi
 internal actual fun <T> runBlockingOnPlatform(block: suspend () -> T): T =
     error("runBlockingOnPlatform is not available on the web target; the web cache must be pre-populated synchronously.")

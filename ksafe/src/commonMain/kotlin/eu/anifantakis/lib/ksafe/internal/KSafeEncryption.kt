@@ -28,7 +28,7 @@ import eu.anifantakis.lib.ksafe.KSafe
  * @see AppleKeychainEncryption
  * @see JvmSoftwareEncryption
  */
-@PublishedApi
+//@PublishedApi
 internal interface KSafeEncryption {
 
     // JH extensions here

@@ -4,13 +4,13 @@ import kotlinx.coroutines.runBlocking
 import kotlin.concurrent.AtomicInt
 import kotlin.concurrent.AtomicReference
 
-@PublishedApi
+//@PublishedApi
 internal actual fun <T> runBlockingOnPlatform(block: suspend () -> T): T = runBlocking { block() }
 
 // Uses AtomicInt (0/1) rather than AtomicReference<Boolean>: AtomicReference uses
 // identity equality, and boxed Booleans don't have guaranteed stable identity on
 // Kotlin/Native, which would break compareAndSet.
-@PublishedApi
+//@PublishedApi
 internal actual class KSafeAtomicFlag actual constructor(initial: Boolean) {
     private val ref = AtomicInt(if (initial) 1 else 0)
     actual fun get(): Boolean = ref.value == 1
@@ -26,7 +26,7 @@ internal actual class KSafeAtomicFlag actual constructor(initial: Boolean) {
  *
  * Reads are lock-free and see a consistent snapshot. Writes are retry-on-conflict.
  */
-@PublishedApi
+//@PublishedApi
 internal actual class KSafeConcurrentMap<V : Any> actual constructor() {
     private val ref = AtomicReference<Map<String, V>>(emptyMap())
 
@@ -64,7 +64,7 @@ internal actual class KSafeConcurrentMap<V : Any> actual constructor() {
     }
 }
 
-@PublishedApi
+//@PublishedApi
 internal actual class KSafeConcurrentSet<T : Any> actual constructor() {
     private val ref = AtomicReference<Set<T>>(emptySet())
 

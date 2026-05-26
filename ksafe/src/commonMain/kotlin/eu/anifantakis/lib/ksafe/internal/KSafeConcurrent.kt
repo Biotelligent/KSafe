@@ -15,7 +15,7 @@ package eu.anifantakis.lib.ksafe.internal
  * not, so we keep this internal.
  */
 
-@PublishedApi
+//@PublishedApi
 internal expect class KSafeAtomicFlag(initial: Boolean) {
     fun get(): Boolean
     fun set(value: Boolean)
@@ -26,7 +26,7 @@ internal expect class KSafeAtomicFlag(initial: Boolean) {
  * A concurrent `String`-keyed map. `V` is unconstrained but expected to be
  * non-null — callers use `remove` rather than storing `null`.
  */
-@PublishedApi
+//@PublishedApi
 internal expect class KSafeConcurrentMap<V : Any>() {
     operator fun get(key: String): V?
     operator fun set(key: String, value: V)
@@ -45,7 +45,7 @@ internal expect class KSafeConcurrentMap<V : Any>() {
     fun replaceIf(key: String, expected: V, new: V): Boolean
 }
 
-@PublishedApi
+//@PublishedApi
 internal expect class KSafeConcurrentSet<T : Any>() {
     fun add(value: T): Boolean
     fun contains(value: T): Boolean
@@ -62,5 +62,5 @@ internal expect class KSafeConcurrentSet<T : Any>() {
  * web backend pre-populates its cache synchronously and should never hit this
  * path.
  */
-@PublishedApi
+//@PublishedApi
 internal expect fun <T> runBlockingOnPlatform(block: suspend () -> T): T
