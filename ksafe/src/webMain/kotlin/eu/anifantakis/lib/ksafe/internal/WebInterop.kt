@@ -11,26 +11,26 @@ package eu.anifantakis.lib.ksafe.internal
  * from `public inline` KSafe members when needed.
  */
 
-@PublishedApi
-internal expect fun localStorageGet(key: String): String?
-
-@PublishedApi
-internal expect fun localStorageSet(key: String, value: String)
-
-@PublishedApi
-internal expect fun localStorageRemove(key: String)
-
-@PublishedApi
-internal expect fun localStorageLength(): Int
-
-@PublishedApi
-internal expect fun localStorageKey(index: Int): String?
-
-/**
- * Returns the current epoch time in milliseconds.
- *
- * On wasmJs this goes through a `@JsFun` with `BigInt` conversion.
- * On js this is simply `kotlin.js.Date.now().toLong()`.
- */
-@PublishedApi
-internal expect fun currentTimeMillisWeb(): Long
+//@PublishedApi
+//internal expect fun localStorageGet(key: String): String?
+//
+//@PublishedApi
+//internal expect fun localStorageSet(key: String, value: String)
+//
+//@PublishedApi
+//internal expect fun localStorageRemove(key: String)
+//
+//@PublishedApi
+//internal expect fun localStorageLength(): Int
+//
+//@PublishedApi
+//internal expect fun localStorageKey(index: Int): String?
+//
+///**
+// * Returns the current epoch time in milliseconds.
+// *
+// * On wasmJs this goes through a `@JsFun` with `BigInt` conversion.
+// * On js this is simply `kotlin.js.Date.now().toLong()`.
+// */
+//@PublishedApi
+//internal expect fun currentTimeMillisWeb(): Long

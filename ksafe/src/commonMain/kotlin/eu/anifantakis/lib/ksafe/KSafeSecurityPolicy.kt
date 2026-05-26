@@ -3,7 +3,7 @@ package eu.anifantakis.lib.ksafe
 /**
  * Action to take when a security violation is detected.
  */
-enum class SecurityAction {
+internal enum class SecurityAction {
     /**
      * Ignore the violation and continue normally.
      * Use this for development or non-sensitive apps.
@@ -26,7 +26,7 @@ enum class SecurityAction {
 /**
  * Types of security violations that can be detected.
  */
-enum class SecurityViolation {
+internal enum class SecurityViolation {
     /**
      * Device is rooted (Android) or jailbroken (iOS).
      * This allows apps to bypass sandboxing and access other apps' data.
@@ -55,7 +55,7 @@ enum class SecurityViolation {
 /**
  * Exception thrown when a security violation is detected and action is [SecurityAction.BLOCK].
  */
-class SecurityViolationException(
+internal class SecurityViolationException(
     val violation: SecurityViolation
 ) : RuntimeException("Security violation: ${violation.name}")
 
@@ -98,7 +98,7 @@ class SecurityViolationException(
  * @property onViolation Callback invoked when a violation is detected and action is WARN or BLOCK.
  *                       Called before throwing exception (for BLOCK) or continuing (for WARN).
  */
-data class KSafeSecurityPolicy(
+internal data class KSafeSecurityPolicy(
     val rootedDevice: SecurityAction = SecurityAction.IGNORE,
     val debuggerAttached: SecurityAction = SecurityAction.IGNORE,
     val debugBuild: SecurityAction = SecurityAction.IGNORE,

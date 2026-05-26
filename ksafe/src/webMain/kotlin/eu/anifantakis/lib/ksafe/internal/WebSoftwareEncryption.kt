@@ -2,6 +2,7 @@ package eu.anifantakis.lib.ksafe.internal
 
 import dev.whyoleg.cryptography.CryptographyProvider
 import dev.whyoleg.cryptography.algorithms.AES
+import eu.anifantakis.lib.ksafe.KSafe
 import eu.anifantakis.lib.ksafe.KSafeConfig
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -29,6 +30,42 @@ internal class WebSoftwareEncryption(
 
     companion object {
         private const val KEY_PREFIX = "ksafe_key_"
+    }
+
+    override fun aesGcmKey(
+        identifier: String,
+        ksafe: KSafe?,
+        hardwareIsolated: Boolean,
+        requireUnlockedDevice: Boolean?
+    ): AES.GCM.Key {
+        val alias = identifier
+        keyCache[alias]?.let { return it }
+
+            // Double-check after acquiring lock
+            keyCache[alias]?.let { return it }
+
+            val storageKey = "$storagePrefix$KEY_PREFIX$alias"
+            val existing = localStorageGet(storageKey)
+
+            val key = if (existing != null) {
+                val keyBytes = Base64.decode(existing)
+                aesGcm.keyDecoder().decodeFromByteArrayBlocking(AES.Key.Format.RAW, keyBytes)
+            } else {
+                // Generate new key
+                val keySize = when (config.keySize) {
+                    128 -> AES.Key.Size.B128
+                    else -> AES.Key.Size.B256
+                }
+                val newKey = aesGcm.keyGenerator(keySize).generateKeyBlocking()
+
+                // Store in localStorage
+                val keyBytes = newKey.encodeToByteArrayBlocking(AES.Key.Format.RAW)
+                localStorageSet(storageKey, Base64.encode(keyBytes))
+                newKey
+            }
+
+            keyCache[alias] = key
+            return key
     }
 
     private val provider = CryptographyProvider.Default

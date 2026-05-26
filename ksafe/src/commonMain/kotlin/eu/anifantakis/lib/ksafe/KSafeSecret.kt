@@ -50,7 +50,7 @@ private val secretMutex = Mutex()
  * @throws IllegalArgumentException if [key] is blank or [size] is not positive.
  */
 @OptIn(ExperimentalEncodingApi::class)
-suspend fun KSafe.getOrCreateSecret(
+internal suspend fun KSafe.getOrCreateSecret(
     key: String = "main_db",
     size: Int = 32,
     protection: KSafeEncryptedProtection = KSafeEncryptedProtection.HARDWARE_ISOLATED,

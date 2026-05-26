@@ -57,7 +57,7 @@ import kotlin.io.encoding.Base64
  */
 @Stable
 @Suppress("unused")
-class KSafe @PublishedApi internal constructor(
+internal class KSafe @PublishedApi internal constructor(
     /**
      * Shared orchestrator. Holds the hot cache, write coalescer, protection
      * metadata, and the non-inline `getXxxRaw`/`putXxxRaw` storage entry points
@@ -314,7 +314,7 @@ class KSafe @PublishedApi internal constructor(
 /**
  * Defines how KSafe manages data in the in-memory cache.
  */
-enum class KSafeMemoryPolicy {
+internal enum class KSafeMemoryPolicy {
     /**
      * **Discouraged — worst cold-start performance.**
      * Every encrypted entry is decrypted at cold-start load time and stored as plain text in RAM.
@@ -427,7 +427,7 @@ internal fun <T> KSafe.getStateFlowRaw(
  * @param defaultValue The fallback value when no stored value exists.
  * @param scope The [CoroutineScope] used to share the flow (e.g., `viewModelScope`).
  */
-inline fun <reified T> KSafe.getStateFlow(
+internal inline fun <reified T> KSafe.getStateFlow(
     key: String,
     defaultValue: T,
     scope: CoroutineScope,
@@ -439,7 +439,7 @@ inline fun <reified T> KSafe.getStateFlow(
     ReplaceWith("getStateFlow(key, defaultValue, scope)"),
     level = DeprecationLevel.WARNING
 )
-inline fun <reified T> KSafe.getStateFlow(
+internal inline fun <reified T> KSafe.getStateFlow(
     key: String,
     defaultValue: T,
     scope: CoroutineScope,
@@ -452,7 +452,7 @@ inline fun <reified T> KSafe.getStateFlow(
     ReplaceWith("getStateFlow(key, defaultValue, scope)"),
     level = DeprecationLevel.WARNING
 )
-inline fun <reified T> KSafe.getStateFlow(
+internal inline fun <reified T> KSafe.getStateFlow(
     key: String,
     defaultValue: T,
     scope: CoroutineScope,

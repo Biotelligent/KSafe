@@ -7,7 +7,7 @@ package eu.anifantakis.lib.ksafe
  * - Plain writes cannot set unlock policy
  * - Unlock policy is only available for encrypted writes
  */
-sealed interface KSafeWriteMode {
+internal sealed interface KSafeWriteMode {
     data object Plain : KSafeWriteMode
 
     data class Encrypted(
@@ -19,7 +19,7 @@ sealed interface KSafeWriteMode {
 /**
  * Encrypted-only protection levels.
  */
-enum class KSafeEncryptedProtection {
+internal enum class KSafeEncryptedProtection {
     DEFAULT,
     HARDWARE_ISOLATED
 }

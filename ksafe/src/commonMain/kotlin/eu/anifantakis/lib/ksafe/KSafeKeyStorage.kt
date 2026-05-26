@@ -6,7 +6,7 @@ package eu.anifantakis.lib.ksafe
  * Enum ordinal provides natural ordering: [SOFTWARE] < [HARDWARE_BACKED] < [HARDWARE_ISOLATED].
  * Use `deviceKeyStorages.max()` to get the highest level available on the current device.
  */
-enum class KSafeKeyStorage {
+internal enum class KSafeKeyStorage {
     /**
      * Keys are stored in software only (file system / localStorage).
      *

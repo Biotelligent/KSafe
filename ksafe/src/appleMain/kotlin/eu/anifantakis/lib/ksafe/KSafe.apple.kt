@@ -42,7 +42,7 @@ private val fileNameRegex = Regex("[a-z][a-z0-9_]*")
 private const val SERVICE_NAME = "eu.anifantakis.ksafe"
 
 @PublishedApi
-internal const val KEY_PREFIX = "eu.anifantakis.ksafe"
+internal const val KEY_PREFIX: String = "eu.anifantakis.ksafe"
 
 /**
  * Sentinel user-key segments for the per-datastore master keys created by the
@@ -125,7 +125,7 @@ private fun isSimulator(): Boolean =
  * group entitlement. KSafe currently uses the default access group; pinning
  * to a specific group is on the roadmap.
  */
-fun KSafe(
+internal fun KSafe(
     fileName: String? = null,
     lazyLoad: Boolean = false,
     memoryPolicy: KSafeMemoryPolicy = KSafeMemoryPolicy.LAZY_PLAIN_TEXT,
@@ -352,4 +352,4 @@ private fun buildAppleKSafe(
 // Non-inline helper retained from pre-refactor — external Swift callers may
 // reference it for warm-up.
 @Suppress("unused")
-fun obtainAesGcm(): AES.GCM = CryptographyProvider.CryptoKit.get(AES.GCM)
+internal fun obtainAesGcm(): AES.GCM = CryptographyProvider.CryptoKit.get(AES.GCM)

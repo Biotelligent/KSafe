@@ -78,7 +78,7 @@ private val dataStoreCache = ConcurrentHashMap<String, DataStore<Preferences>>()
  *   (SD card / `getExternalFilesDir()`) for sensitive data, where world-
  *   readable semantics may apply.
  */
-fun KSafe(
+internal fun KSafe(
     context: Context,
     fileName: String? = null,
     lazyLoad: Boolean = false,

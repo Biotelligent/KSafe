@@ -44,7 +44,7 @@ internal class KSafeDelegate<T>(
  * Uses non-blocking [KSafe.getDirect]/[KSafe.putDirect] under the hood.
  * Default mode is encrypted.
  */
-inline operator fun <reified T> KSafe.invoke(
+internal inline operator fun <reified T> KSafe.invoke(
     defaultValue: T,
     key: String? = null,
     mode: KSafeWriteMode = KSafeWriteMode.Encrypted()
@@ -111,7 +111,7 @@ internal class KSafeStateFlowDelegate<T>(
  * }
  * ```
  */
-inline fun <reified T> KSafe.asFlow(
+internal inline fun <reified T> KSafe.asFlow(
     defaultValue: T,
     key: String? = null,
 ): ReadOnlyProperty<Any?, Flow<T>> = KSafeFlowDelegate(this, serializer(), defaultValue, key)
@@ -148,7 +148,7 @@ inline fun <reified T> KSafe.asFlow(
  * }
  * ```
  */
-class WritableKSafeFlow<T> @PublishedApi internal constructor(
+internal class WritableKSafeFlow<T> @PublishedApi internal constructor(
     private val source: Flow<T>,
     private val writer: (T) -> Unit,
 ) : Flow<T> by source {
@@ -224,7 +224,7 @@ internal class KSafeWritableFlowDelegate<T>(
  * }
  * ```
  */
-inline fun <reified T> KSafe.asWritableFlow(
+internal inline fun <reified T> KSafe.asWritableFlow(
     defaultValue: T,
     key: String? = null,
     mode: KSafeWriteMode = KSafeWriteMode.Encrypted(),
@@ -246,7 +246,7 @@ inline fun <reified T> KSafe.asWritableFlow(
  * }
  * ```
  */
-inline fun <reified T> KSafe.asStateFlow(
+internal inline fun <reified T> KSafe.asStateFlow(
     defaultValue: T,
     scope: CoroutineScope,
     key: String? = null,
@@ -372,7 +372,7 @@ internal class KSafeMutableStateFlowDelegate<T>(
  * }
  * ```
  */
-inline fun <reified T> KSafe.asMutableStateFlow(
+internal inline fun <reified T> KSafe.asMutableStateFlow(
     defaultValue: T,
     scope: CoroutineScope,
     key: String? = null,
@@ -385,7 +385,7 @@ inline fun <reified T> KSafe.asMutableStateFlow(
     "Replace \"encrypted\" parameter with \"mode\" parameter.\n\nGuideline: [Deprecated] -> [New]:\nencrypted=true -> KSafeWriteMode.Encrypted()\nencrypted=false -> KSafeWriteMode.Plain",
     ReplaceWith("invoke(defaultValue, key, if (encrypted) KSafeWriteMode.Encrypted() else KSafeWriteMode.Plain)")
 )
-inline operator fun <reified T> KSafe.invoke(
+internal inline operator fun <reified T> KSafe.invoke(
     defaultValue: T,
     key: String? = null,
     encrypted: Boolean

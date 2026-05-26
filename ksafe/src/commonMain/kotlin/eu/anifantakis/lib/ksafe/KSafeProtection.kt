@@ -7,7 +7,7 @@ package eu.anifantakis.lib.ksafe
  * - [KSafeWriteMode.Plain]
  * - [KSafeWriteMode.Encrypted]
  */
-enum class KSafeProtection {
+internal enum class KSafeProtection {
     /**
      * Platform-default encryption.
      *

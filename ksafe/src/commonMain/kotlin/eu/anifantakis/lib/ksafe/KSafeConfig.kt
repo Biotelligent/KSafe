@@ -73,7 +73,7 @@ import kotlinx.serialization.json.Json
  *
  *           Defaults to [KSafeDefaults.json] (`Json { ignoreUnknownKeys = true }`).
  */
-data class KSafeConfig(
+internal data class KSafeConfig(
     val keySize: Int = 256,
     val androidAuthValiditySeconds: Int = 30,
     val requireUnlockedDevice: Boolean = false,
@@ -93,7 +93,7 @@ data class KSafeConfig(
 /**
  * Shared defaults for KSafe configuration.
  */
-object KSafeDefaults {
+internal object KSafeDefaults {
     /**
      * The default [Json] instance used for user-payload serialization.
      *

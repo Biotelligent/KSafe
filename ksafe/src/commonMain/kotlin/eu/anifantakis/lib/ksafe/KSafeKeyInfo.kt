@@ -7,7 +7,7 @@ package eu.anifantakis.lib.ksafe
  * or `null` for plaintext entries.
  * @property storage Where the encryption key material actually resides on this device.
  */
-data class KSafeKeyInfo(
+internal data class KSafeKeyInfo(
     val protection: KSafeProtection?,
     val storage: KSafeKeyStorage
 )

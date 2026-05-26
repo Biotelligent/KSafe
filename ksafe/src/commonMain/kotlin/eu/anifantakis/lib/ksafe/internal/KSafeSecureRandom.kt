@@ -22,4 +22,4 @@ package eu.anifantakis.lib.ksafe.internal
  * @return A new [ByteArray] filled with cryptographically secure random bytes.
  * @throws IllegalArgumentException if [size] is not positive.
  */
-expect fun secureRandomBytes(size: Int): ByteArray
+internal expect fun secureRandomBytes(size: Int): ByteArray

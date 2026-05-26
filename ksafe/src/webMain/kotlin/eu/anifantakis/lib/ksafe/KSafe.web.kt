@@ -50,7 +50,7 @@ private const val MASTER_KEY_DEFAULT: String = "__ksafe_master__"
  *   reconstitutes the typed primitive through the request's serializer on read.
  */
 @Suppress("UNUSED_PARAMETER")
-fun KSafe(
+internal fun KSafe(
     fileName: String? = null,
     lazyLoad: Boolean = false,
     memoryPolicy: KSafeMemoryPolicy = KSafeMemoryPolicy.PLAIN_TEXT,
@@ -133,4 +133,4 @@ private fun buildWebKSafe(
  * extension because `awaitCacheReady` is web-only — JVM/Android/iOS
  * preload synchronously and don't need it.
  */
-suspend fun KSafe.awaitCacheReady() = core.ensureCacheReadySuspend()
+internal suspend fun KSafe.awaitCacheReady() = core.ensureCacheReadySuspend()

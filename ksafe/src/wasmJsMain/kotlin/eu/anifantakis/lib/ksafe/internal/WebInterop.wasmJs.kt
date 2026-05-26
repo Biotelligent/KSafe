@@ -29,19 +29,19 @@ private external fun _localStorageKey(index: Int): String?
 private external fun _currentTimeMillis(): Long
 
 @PublishedApi
-internal actual fun localStorageGet(key: String): String? = _localStorageGet(key)
+internal fun localStorageGet(key: String): String? = _localStorageGet(key)
 
 @PublishedApi
-internal actual fun localStorageSet(key: String, value: String) = _localStorageSet(key, value)
+internal fun localStorageSet(key: String, value: String) = _localStorageSet(key, value)
 
 @PublishedApi
-internal actual fun localStorageRemove(key: String) = _localStorageRemove(key)
+internal fun localStorageRemove(key: String) = _localStorageRemove(key)
 
 @PublishedApi
-internal actual fun localStorageLength(): Int = _localStorageLength()
+internal fun localStorageLength(): Int = _localStorageLength()
 
 @PublishedApi
-internal actual fun localStorageKey(index: Int): String? = _localStorageKey(index)
+internal fun localStorageKey(index: Int): String? = _localStorageKey(index)
 
 @PublishedApi
-internal actual fun currentTimeMillisWeb(): Long = _currentTimeMillis()
+internal fun currentTimeMillisWeb(): Long = _currentTimeMillis()

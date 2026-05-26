@@ -24,7 +24,7 @@ import kotlin.io.encoding.ExperimentalEncodingApi
 private external fun _cryptoRandomBase64(size: Int): String
 
 @OptIn(ExperimentalEncodingApi::class)
-actual fun secureRandomBytes(size: Int): ByteArray {
+internal actual fun secureRandomBytes(size: Int): ByteArray {
     require(size > 0) { "size must be positive" }
     return Base64.decode(_cryptoRandomBase64(size))
 }
