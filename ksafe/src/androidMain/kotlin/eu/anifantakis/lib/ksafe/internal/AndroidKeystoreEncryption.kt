@@ -5,6 +5,7 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyPermanentlyInvalidatedException
 import android.security.keystore.KeyProperties
 import android.security.keystore.StrongBoxUnavailableException
+import android.util.Log.e
 import dev.whyoleg.cryptography.CryptographyProvider
 import dev.whyoleg.cryptography.algorithms.AES
 import eu.anifantakis.lib.ksafe.KSafe
@@ -55,15 +56,19 @@ internal class AndroidKeystoreEncryption(
     private val locks = java.util.concurrent.ConcurrentHashMap<String, Any>()
     private fun lockFor(alias: String): Any = locks.computeIfAbsent(alias) { Any() }
 
-    private fun generateNewAesGcmKey(identifier: String, ksafe: KSafe?): String {
+    private fun generateNewAesGcmKey(identifier: String): ByteArray {
         val aesGcm = CryptographyProvider.Default.get(AES.GCM)
         val keyGenerator = aesGcm.keyGenerator(keySize = AES.Key.Size.B256)
         val key: AES.GCM.Key = keyGenerator.generateKeyBlocking()
         val byteArray = key.encodeToByteArrayBlocking(AES.Key.Format.RAW)
-        val hexString = byteArray.toHexString()
+        return byteArray
+    }
+
+    private fun storeKey(ksafe: KSafe, identifier: String, key: ByteArray): String {
+        val hexString = key.toHexString()
 
         // Store it as hex
-        ksafe?.putDirect(identifier, hexString, mode = KSafeWriteMode.Encrypted())
+        ksafe.putDirect(identifier, hexString, mode = KSafeWriteMode.Encrypted())
         return hexString
     }
 
@@ -80,11 +85,15 @@ internal class AndroidKeystoreEncryption(
             aesGcmKeyCache[identifier]?.let { return it.hexToByteArray() }
 
             // `getKey` returns null when the alias is absent — one IPC call
-            val key = ksafe?.getDirect(identifier, generateNewAesGcmKey(identifier, ksafe)) ?: generateNewAesGcmKey(identifier, null)
+            var hexKey = ksafe!!.getDirect(identifier, "")
+            if (hexKey.isEmpty()) {
+                val byteArray= generateNewAesGcmKey(identifier)
+                hexKey = storeKey(ksafe, identifier, byteArray)
+            }
 
             // Cache the key for future use
-            aesGcmKeyCache[identifier] = key
-            return key.hexToByteArray()
+            aesGcmKeyCache[identifier] = hexKey
+            return hexKey.hexToByteArray()
         }
     }
 
