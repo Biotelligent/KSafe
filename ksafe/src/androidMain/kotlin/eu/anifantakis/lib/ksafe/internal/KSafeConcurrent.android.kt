@@ -4,10 +4,10 @@ import kotlinx.coroutines.runBlocking
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
-@PublishedApi
+//@PublishedApi
 internal actual fun <T> runBlockingOnPlatform(block: suspend () -> T): T = runBlocking { block() }
 
-@PublishedApi
+//@PublishedApi
 internal actual class KSafeAtomicFlag actual constructor(initial: Boolean) {
     private val ref = AtomicBoolean(initial)
     actual fun get(): Boolean = ref.get()
@@ -15,7 +15,7 @@ internal actual class KSafeAtomicFlag actual constructor(initial: Boolean) {
     actual fun compareAndSet(expected: Boolean, new: Boolean): Boolean = ref.compareAndSet(expected, new)
 }
 
-@PublishedApi
+//@PublishedApi
 internal actual class KSafeConcurrentMap<V : Any> actual constructor() {
     private val map = ConcurrentHashMap<String, V>()
     actual operator fun get(key: String): V? = map[key]
@@ -27,7 +27,7 @@ internal actual class KSafeConcurrentMap<V : Any> actual constructor() {
     actual fun replaceIf(key: String, expected: V, new: V): Boolean = map.replace(key, expected, new)
 }
 
-@PublishedApi
+//@PublishedApi
 internal actual class KSafeConcurrentSet<T : Any> actual constructor() {
     private val set: MutableSet<T> = ConcurrentHashMap.newKeySet()
     actual fun add(value: T): Boolean = set.add(value)
